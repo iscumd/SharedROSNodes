@@ -144,6 +144,10 @@ include_directories(
 # )
 
 # ADD NEW CPPs HERE
+add_executable(basic_drive_mode_control src/basic_drive_mode_control.cpp)
+add_dependencies(basic_drive_mode_control ${PROJECT_NAME}_generate_messages_cpp)
+target_link_libraries(basic_drive_mode_control ${catkin_LIBRARIES})
+
 add_executable(joystick src/joystick.cpp)
 add_dependencies(joystick ${PROJECT_NAME}_generate_messages_cpp)
 target_link_libraries(joystick ${catkin_LIBRARIES})
