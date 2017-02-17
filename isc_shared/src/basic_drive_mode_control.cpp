@@ -31,10 +31,9 @@ void joystickCallback(const isc_shared::joystick::ConstPtr& joy){
 void manualCallback(const geometry_msgs::Twist::ConstPtr& msg){
 	if(!autoMode){
 		float leftWheelSpeed = 0.0, rightWheelSpeed = 0.0;
-		float speedMultiplier = 127.0; 
 
-		leftWheelSpeed = (msg->linear.x - msg->angular.z) * speedMultiplier;
-		rightWheelSpeed = (msg->linear.x + msg->angular.z) * speedMultiplier;
+		leftWheelSpeed = (msg->linear.x - msg->angular.z);
+		rightWheelSpeed = (msg->linear.x + msg->angular.z);
 
 		isc_shared::wheel_speeds msg;
 		msg.left = leftWheelSpeed;
@@ -46,10 +45,9 @@ void manualCallback(const geometry_msgs::Twist::ConstPtr& msg){
 void autoCallback(const geometry_msgs::Twist::ConstPtr& msg){
 	if(!autoMode){
 		float leftWheelSpeed = 0.0, rightWheelSpeed = 0.0;
-		float speedMultiplier = 127.0; 
 
-		leftWheelSpeed = (msg->linear.x - msg->angular.z) * speedMultiplier;
-		rightWheelSpeed = (msg->linear.x + msg->angular.z) * speedMultiplier;
+		leftWheelSpeed = (msg->linear.x - msg->angular.z);
+		rightWheelSpeed = (msg->linear.x + msg->angular.z);
 
 		isc_shared::wheel_speeds msg;
 		msg.left = leftWheelSpeed;

@@ -24,9 +24,10 @@ void driveModeCallback(const isc_shared::wheel_speeds::ConstPtr& msg){
 	/* This fires every time a button is pressed/released
 	and when an axis changes (even if it doesn't leave the
 	deadzone). */
+	float speedMultiplier = 127.0; 
 
-	leftSpeed = msg->left;
-	rightSpeed = msg->right;
+	leftSpeed = msg->left * speedMultiplier;
+	rightSpeed = msg->right * speedMultiplier;
 	
 	ROS_INFO("Roboteq: left wheel=%f right wheel=%f", leftSpeed, rightSpeed);
 }

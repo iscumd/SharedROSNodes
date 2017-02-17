@@ -24,9 +24,10 @@ void driveModeCallback(const isc_shared::wheel_speeds::ConstPtr& msg){
 	/* This fires every time a button is pressed/released
 	and when an axis changes (even if it doesn't leave the
 	deadzone). */
+	float speedMultiplier = 1000.0; 
 
-	leftSpeed = msg->left;
-	rightSpeed = msg->right;
+	leftSpeed = msg->left * speedMultiplier;
+	rightSpeed = msg->right * speedMultiplier;
 	
 	ROS_INFO("Roboteq: left wheel=%f right wheel=%f", leftSpeed, rightSpeed);
 }
@@ -120,12 +121,16 @@ bool sendCommand(string command){
 	return true;
 }
 
-unsigned char constrainSpeed(double speed){
-	unsigned char temp = fabs(speed);
-	if(temp > 127){
-		temp = 127;
+double constrainSpeed(double speed){
+	if(fabs(speed) > 1000){
+		if(speed > 0){
+			speed = 1000;
+		}
+		else{
+			speed = -1000;
+		}		
 	}
-	return temp;
+	return speed;
 }
 
 void move(){
@@ -134,19 +139,8 @@ void move(){
 		return;
 	}
 
-	if(rightSpeed < 0){
-		sendCommand(stringFormat("!a%.2X", constrainSpeed(rightSpeed)));
-	}
-	else{
-		sendCommand(stringFormat("!A%.2X", constrainSpeed(rightSpeed)));
-	}
-
-	if(leftSpeed < 0){
-		sendCommand(stringFormat("!b%.2X", constrainSpeed(leftSpeed)));
-	}
-	else{
-		sendCommand(stringFormat("!B%.2X", constrainSpeed(leftSpeed)));
-	}
+	sendCommand(stringFormat("!G 1 %i", constrainSpeed(rightSpeed)));
+	sendCommand(stringFormat("!G 2 %i", constrainSpeed(leftSpeed)));
 }
 
 int main(int argc, char **argv){
@@ -161,7 +155,7 @@ int main(int argc, char **argv){
 
 	ros::Rate loopRate(100); //Hz
 	while(ros::ok()) {
-		ROS_INFO("Connecting Roboteq on port %s", port.c_str());
+		ROS_INFO("Connecting NextGen Roboteq on port %s", port.c_str());
 		try {
 			connect();
 		} catch(std::exception &e) {
