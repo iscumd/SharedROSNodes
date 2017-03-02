@@ -144,7 +144,7 @@ void move(){
 }
 
 int main(int argc, char **argv){
-	ros::init(argc, argv, "roboteq");
+	ros::init(argc, argv, "roboteq_nextgen");
 
 	ros::NodeHandle n;
 

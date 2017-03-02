@@ -56,9 +56,9 @@ add_message_files(
 )
 
 ## Generate services in the 'srv' folder
-add_service_files(
-  FILES
-)
+#add_service_files(
+#  FILES
+#)
 
 ## Generate actions in the 'action' folder
 # add_action_files(
@@ -156,7 +156,7 @@ add_executable(manual_control src/manual_control.cpp)
 add_dependencies(manual_control ${PROJECT_NAME}_generate_messages_cpp)
 target_link_libraries(manual_control ${catkin_LIBRARIES})
 
-add_executable(roboteq src/roboteq_nextgen.cpp)
+add_executable(roboteq src/roboteq.cpp)
 add_dependencies(roboteq ${PROJECT_NAME}_generate_messages_cpp)
 target_link_libraries(roboteq ${serial_LIBRARIES} ${serial_utils_LIBRARIES} ${catkin_LIBRARIES})
 

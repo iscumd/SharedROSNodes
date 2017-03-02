@@ -17,8 +17,8 @@ void joystickCallback(const isc_shared::joystick::ConstPtr& joy){
 	joyTurn = joy->LeftStick_LR;
 	
 	geometry_msgs::Twist msg;
-	msg.linear.x = joy->RB ? joySpeed : 0;
-	msg.angular.z = joy->RB ? joyTurn : 0;
+	msg.linear.x = joy->LB ? joySpeed : 0;
+	msg.angular.z = joy->LB ? joyTurn : 0;
 	manualPub.publish(msg);
 
 	ROS_INFO("Manual Control: %s linear.x=%f angular.z=%f", joy->RB ? "on" : "off", msg.linear.x, msg.angular.z);
