@@ -21,7 +21,7 @@ void joystickCallback(const isc_shared::joystick::ConstPtr& joy){
 	msg.angular.z = joy->LB ? joyTurn : 0;
 	manualPub.publish(msg);
 
-	ROS_INFO("Manual Control: %s linear.x=%f angular.z=%f", joy->RB ? "on" : "off", msg.linear.x, msg.angular.z);
+	ROS_INFO("Manual Control: %s linear.x=%f angular.z=%f", joy->LB ? "on" : "off", msg.linear.x, msg.angular.z);
 }
 
 int main(int argc, char **argv){
