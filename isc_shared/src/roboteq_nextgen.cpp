@@ -57,10 +57,10 @@ void connect(){
 
 	serialPort = new Serial();
 	serialPort->setPort(port);
- 	serialPort->setBaudrate(9600);
-  	serialPort->setParity(serial::parity_even);
+ 	serialPort->setBaudrate(115200);
+  	//serialPort->setParity(serial::parity_even);
   	serialPort->setStopbits(serial::stopbits_one);
-  	serialPort->setBytesize(serial::sevenbits);
+  	serialPort->setBytesize(serial::eightbits);
 	serial::Timeout to = serial::Timeout::simpleTimeout(10);
 	serialPort->setTimeout(to);
 
@@ -103,6 +103,7 @@ inline bool isPlusOrMinus(const string &token) {
 
 bool sendCommand(string command){
 	BufferedFilterPtr echoFilter = serialListener.createBufferedFilter(SerialListener::exactly(command));
+	ROS_INFO("Sending commend: %s", command.c_str());
 	serialPort->write(command+"\r");
 	if (echoFilter->wait(50).empty()) {
 		ROS_ERROR("Failed to receive an echo from the Roboteq.");
@@ -115,7 +116,7 @@ bool sendCommand(string command){
 			ROS_ERROR("The Roboteq rejected the command.");
 			return false;
 		}
-		ROS_ERROR("Did not receive a confirmation or rejection from the Roboteq.");
+		//ROS_ERROR("Did not receive a confirmation or rejection from the Roboteq.");
 		return false;
 	}
 	return true;
@@ -139,8 +140,8 @@ void move(){
 		return;
 	}
 
-	sendCommand(stringFormat("!G 1 %i", constrainSpeed(rightSpeed)));
-	sendCommand(stringFormat("!G 2 %i", constrainSpeed(leftSpeed)));
+	sendCommand(stringFormat("!G 1 %f", constrainSpeed(rightSpeed)));
+	sendCommand(stringFormat("!G 2 %f", constrainSpeed(leftSpeed)));
 }
 
 int main(int argc, char **argv){
