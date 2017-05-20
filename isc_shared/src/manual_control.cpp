@@ -6,19 +6,27 @@
 
 ros::Publisher manualPub;
 
+bool flipForwardBackward = false;
+bool flipLeftRight = false;
+
 void joystickCallback(const isc_shared::joystick::ConstPtr& joy){	
 	/* This fires every time a button is pressed/released
 	and when an axis changes (even if it doesn't leave the
 	deadzone). */
 
-	float joySpeed = 0.0, joyTurn = 0.0;
+	bool enableDriving = joy->LB; //the dead man's switch
 
-	joySpeed = joy->LeftStick_UD;
-	joyTurn = joy->LeftStick_LR;
+	//toggle flipping controls
+	if(joy->Y && !enableDriving) flipForwardBackward = !flipForwardBackward;
+	if(joy->X && !enableDriving) flipLeftRight = !flipLeftRight;
+
+	float joySpeed = 0.0, joyTurn = 0.0;
+	joySpeed = joy->LeftStick_UD * (flipForwardBackward ? -1.0 : 1.0);
+	joyTurn = joy->LeftStick_LR * (flipLeftRight ? -1.0 : 1.0);
 	
 	geometry_msgs::Twist msg;
-	msg.linear.x = joy->LB ? joySpeed : 0;
-	msg.angular.z = joy->LB ? joyTurn : 0;
+	msg.linear.x = enableDriving ? joySpeed : 0;
+	msg.angular.z = enableDriving ? joyTurn : 0;
 	manualPub.publish(msg);
 
 	ROS_INFO("Manual Control: %s linear.x=%f angular.z=%f", joy->LB ? "on" : "off", msg.linear.x, msg.angular.z);
