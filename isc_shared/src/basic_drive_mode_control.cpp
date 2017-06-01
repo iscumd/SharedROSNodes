@@ -10,6 +10,15 @@ bool startButtonDown = false;
 bool autoMode = false;
 ros::Publisher wheelSpeedPub;
 
+void updateDriveModeParameter(){
+	if(autoMode){
+		ros::param::set("/drive_mode", "auto");
+	}
+	else {
+		ros::param::set("/drive_mode", "manual");
+	}
+}
+
 void joystickCallback(const isc_shared::joystick::ConstPtr& joy){	
 	/* This fires every time a button is pressed/released
 	and when an axis changes (even if it doesn't leave the
@@ -24,6 +33,7 @@ void joystickCallback(const isc_shared::joystick::ConstPtr& joy){
 	if(startButtonDown && !joy->Start){ //The Start button has been released
 		startButtonDown = false;
 		autoMode = !autoMode;
+		updateDriveModeParameter();
 		ROS_INFO("Drive Mode Control: Switching to %s mode.", autoMode ? "AUTO" : "MANUAL");
 	}
 }
@@ -60,6 +70,8 @@ int main(int argc, char **argv){
 	ros::init(argc, argv, "drive_mode_control");
 
 	ros::NodeHandle n;
+
+	updateDriveModeParameter();
 
 	wheelSpeedPub = n.advertise<isc_shared::wheel_speeds>("wheelSpeeds", 5);
 
