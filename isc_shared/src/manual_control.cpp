@@ -9,6 +9,9 @@ ros::Publisher manualPub;
 bool flipForwardBackward = false;
 bool flipLeftRight = false;
 
+double speedMultiplier;
+double turnMultiplier;
+
 void joystickCallback(const isc_shared::joystick::ConstPtr& joy){	
 	/* This fires every time a button is pressed/released
 	and when an axis changes (even if it doesn't leave the
@@ -21,9 +24,13 @@ void joystickCallback(const isc_shared::joystick::ConstPtr& joy){
 	if(joy->X && !enableDriving) flipLeftRight = !flipLeftRight;
 
 	float joySpeed = 0.0, joyTurn = 0.0;
-	joySpeed = joy->LeftStick_UD * (flipForwardBackward ? -1.0 : 1.0);
-	joyTurn = joy->LeftStick_LR * (flipLeftRight ? -1.0 : 1.0);
-	
+	joySpeed = joy->LeftStick_UD * (flipForwardBackward ? -1.0 : 1.0) * speedMultiplier;
+	joyTurn = joy->LeftStick_LR * (flipLeftRight ? -1.0 : 1.0) * turnMultiplier;
+
+	//disable joystick axes
+	if(joy->A) joySpeed = 0;
+	if(joy->B) joyTurn = 0;
+
 	geometry_msgs::Twist msg;
 	msg.linear.x = enableDriving ? joySpeed : 0;
 	msg.angular.z = enableDriving ? joyTurn : 0;
@@ -36,6 +43,9 @@ int main(int argc, char **argv){
 	ros::init(argc, argv, "manual_control");
 
 	ros::NodeHandle n;
+	
+	n.param("manual_control_speed_multiplier", speedMultiplier, 1.0);
+	n.param("manual_control_turn_multiplier", turnMultiplier, 0.5);
 
 	manualPub = n.advertise<geometry_msgs::Twist>("manualControl", 5);
 
