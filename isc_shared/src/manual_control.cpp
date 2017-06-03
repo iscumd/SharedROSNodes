@@ -14,7 +14,7 @@ double turnMultiplier;
 
 bool enableLogging;
 
-void joystickCallback(const isc_shared::joystick::ConstPtr& joy){	
+void joystickCallback(const isc_shared::joystick::ConstPtr& joy){
 	/* This fires every time a button is pressed/released
 	and when an axis changes (even if it doesn't leave the
 	deadzone). */
@@ -26,7 +26,7 @@ void joystickCallback(const isc_shared::joystick::ConstPtr& joy){
 	if(joy->X && !enableDriving) flipLeftRight = !flipLeftRight;
 
 	float joySpeed = 0.0, joyTurn = 0.0;
-	joySpeed = joy->LeftStick_UD * (flipForwardBackward ? -1.0 : 1.0) * speedMultiplier;
+	joySpeed = joy->LeftStick_UD * (flipForwardBackward ? -1.0 : 1.0);// * speedMultiplier;
 	joyTurn = joy->LeftStick_LR * (flipLeftRight ? -1.0 : 1.0) * turnMultiplier;
 
 	//disable joystick axes
@@ -45,7 +45,7 @@ int main(int argc, char **argv){
 	ros::init(argc, argv, "manual_control");
 
 	ros::NodeHandle n;
-	
+
 	n.param("manual_control_enable_logging", enableLogging, false);
 
 	n.param("manual_control_speed_multiplier", speedMultiplier, 1.0);
@@ -56,6 +56,6 @@ int main(int argc, char **argv){
 	ros::Subscriber joystickSub = n.subscribe("joystick", 5, joystickCallback);
 
 	ros::spin();
-	
+
 	return 0;
 }

@@ -8,6 +8,8 @@
 
 bool startButtonDown = false;
 bool autoMode = false;
+int speedBoostButton=false;//mike added this 6/3
+
 ros::Publisher wheelSpeedPub;
 
 void updateDriveModeParameter(){
@@ -19,13 +21,13 @@ void updateDriveModeParameter(){
 	}
 }
 
-void joystickCallback(const isc_shared::joystick::ConstPtr& joy){	
+void joystickCallback(const isc_shared::joystick::ConstPtr& joy){
 	/* This fires every time a button is pressed/released
 	and when an axis changes (even if it doesn't leave the
 	deadzone). */
 
-	/* We track the button state to ensure you can't 
-	accidentally hold down Start and press another 
+	/* We track the button state to ensure you can't
+	accidentally hold down Start and press another
 	button to toggle the mode */
 	if(joy->Start){ //The Start button has been pressed
 		startButtonDown = true;
@@ -36,14 +38,28 @@ void joystickCallback(const isc_shared::joystick::ConstPtr& joy){
 		updateDriveModeParameter();
 		ROS_INFO("Drive Mode Control: Switching to %s mode.", autoMode ? "AUTO" : "MANUAL");
 	}
+	if(startButtonDown && !joy->Start){ //The Start button has been released
+		startButtonDown = false;
+		autoMode = !autoMode;
+		updateDriveModeParameter();
+		ROS_INFO("Drive Mode Control: Switching to %s mode.", autoMode ? "AUTO" : "MANUAL");
+	}
+	speedBoostButton = joy->LS;//mike added this 6/3
+
 }
 
 void manualCallback(const geometry_msgs::Twist::ConstPtr& msg){
 	if(!autoMode){
 		float leftWheelSpeed = 0.0, rightWheelSpeed = 0.0;
 
-		leftWheelSpeed = (msg->linear.x - msg->angular.z);
-		rightWheelSpeed = (msg->linear.x + msg->angular.z);
+        if(speedBoostButton)
+        {
+            leftWheelSpeed = (msg->linear.x - msg->angular.z);
+            rightWheelSpeed = (msg->linear.x + msg->angular.z);
+        }else{
+            leftWheelSpeed = (msg->linear.x - msg->angular.z)/2;
+            rightWheelSpeed = (msg->linear.x + msg->angular.z)/2;
+        }
 
 		isc_shared::wheel_speeds msg;
 		msg.left = leftWheelSpeed;
@@ -80,6 +96,6 @@ int main(int argc, char **argv){
 	ros::Subscriber autoSub = n.subscribe("autoControl", 5, autoCallback);
 
 	ros::spin();
-	
+
 	return 0;
 }
