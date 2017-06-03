@@ -19,6 +19,7 @@ serial::Serial *serialPort;
 serial::utils::SerialListener serialListener;
 bool roboteqIsConnected = false;
 double leftSpeed = 0, rightSpeed = 0;
+bool enableLogging;
 
 void driveModeCallback(const isc_shared::wheel_speeds::ConstPtr& msg){	
 	/* This fires every time a button is pressed/released
@@ -29,7 +30,7 @@ void driveModeCallback(const isc_shared::wheel_speeds::ConstPtr& msg){
 	leftSpeed = msg->left * speedMultiplier;
 	rightSpeed = msg->right * speedMultiplier;
 	
-	ROS_INFO("Roboteq: left wheel=%f right wheel=%f", leftSpeed, rightSpeed);
+	if(enableLogging) ROS_INFO("Roboteq: left wheel=%f right wheel=%f", leftSpeed, rightSpeed);
 }
 
 void disconnect(){
@@ -103,7 +104,7 @@ inline bool isPlusOrMinus(const string &token) {
 
 bool sendCommand(string command){
 	BufferedFilterPtr echoFilter = serialListener.createBufferedFilter(SerialListener::exactly(command));
-	ROS_INFO("Sending commend: %s", command.c_str());
+	if(enableLogging) ROS_INFO("Sending commend: %s", command.c_str());
 	serialPort->write(command+"\r");
 	if (echoFilter->wait(50).empty()) {
 		ROS_ERROR("Failed to receive an echo from the Roboteq.");
@@ -151,6 +152,7 @@ int main(int argc, char **argv){
 
 	// Serial port parameter
 	n.param("serial_port", port, std::string("/dev/ttyUSB0"));
+	n.param("roboteq_enable_logging", enableLogging, false);
 
 	ros::Subscriber driveModeSub = n.subscribe("wheelSpeeds", 5, driveModeCallback);
 
