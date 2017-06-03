@@ -12,6 +12,8 @@ bool flipLeftRight = false;
 double speedMultiplier;
 double turnMultiplier;
 
+bool enableLogging;
+
 void joystickCallback(const isc_shared::joystick::ConstPtr& joy){	
 	/* This fires every time a button is pressed/released
 	and when an axis changes (even if it doesn't leave the
@@ -36,7 +38,7 @@ void joystickCallback(const isc_shared::joystick::ConstPtr& joy){
 	msg.angular.z = enableDriving ? joyTurn : 0;
 	manualPub.publish(msg);
 
-	ROS_INFO("Manual Control: %s linear.x=%f angular.z=%f", joy->LB ? "on" : "off", msg.linear.x, msg.angular.z);
+	if(enableLogging) ROS_INFO("Manual Control: %s linear.x=%f angular.z=%f", joy->LB ? "on" : "off", msg.linear.x, msg.angular.z);
 }
 
 int main(int argc, char **argv){
@@ -44,6 +46,8 @@ int main(int argc, char **argv){
 
 	ros::NodeHandle n;
 	
+	n.param("manual_control_enable_logging", enableLogging, false);
+
 	n.param("manual_control_speed_multiplier", speedMultiplier, 1.0);
 	n.param("manual_control_turn_multiplier", turnMultiplier, 0.5);
 
