@@ -1,6 +1,6 @@
 #include "ros/ros.h"
 #include "geometry_msgs/Twist.h"
-#include "isc_shared/joystick.h"
+#include "isc_shared/xinput.h"
 #include "isc_shared/wheel_speeds.h"
 
 #include <sstream>
@@ -21,7 +21,7 @@ void updateDriveModeParameter(){
 	}
 }
 
-void joystickCallback(const isc_shared::joystick::ConstPtr& joy){
+void joystickCallback(const isc_shared::xinput::ConstPtr& joy){
 	/* This fires every time a button is pressed/released
 	and when an axis changes (even if it doesn't leave the
 	deadzone). */
@@ -89,11 +89,11 @@ int main(int argc, char **argv){
 
 	updateDriveModeParameter();
 
-	wheelSpeedPub = n.advertise<isc_shared::wheel_speeds>("wheelSpeeds", 5);
+	wheelSpeedPub = n.advertise<isc_shared::wheel_speeds>("motors/wheel_speeds", 5);
 
-	ros::Subscriber joystickSub = n.subscribe("joystick", 5, joystickCallback);
-	ros::Subscriber manualSub = n.subscribe("manualControl", 5, manualCallback);
-	ros::Subscriber autoSub = n.subscribe("autoControl", 5, autoCallback);
+	ros::Subscriber joystickSub = n.subscribe("joystick/xbox360", 5, joystickCallback);
+	ros::Subscriber manualSub = n.subscribe("manual_control", 5, manualCallback);
+	ros::Subscriber autoSub = n.subscribe("auto_control", 5, autoCallback);
 
 	ros::spin();
 

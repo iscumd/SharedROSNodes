@@ -51,8 +51,9 @@ find_package(catkin REQUIRED COMPONENTS
 ## Generate messages in the 'msg' folder
 add_message_files(
   FILES
-  joystick.msg
+  drive_mode.msg
   wheel_speeds.msg
+  xinput.msg
 )
 
 ## Generate services in the 'srv' folder
@@ -148,9 +149,9 @@ add_executable(basic_drive_mode_control src/basic_drive_mode_control.cpp)
 add_dependencies(basic_drive_mode_control ${PROJECT_NAME}_generate_messages_cpp)
 target_link_libraries(basic_drive_mode_control ${catkin_LIBRARIES})
 
-add_executable(joystick src/joystick.cpp)
-add_dependencies(joystick ${PROJECT_NAME}_generate_messages_cpp)
-target_link_libraries(joystick ${catkin_LIBRARIES})
+add_executable(joystick_xbox360 src/joystick_xbox360.cpp)
+add_dependencies(joystick_xbox360 ${PROJECT_NAME}_generate_messages_cpp)
+target_link_libraries(joystick_xbox360 ${catkin_LIBRARIES})
 
 add_executable(manual_control src/manual_control.cpp)
 add_dependencies(manual_control ${PROJECT_NAME}_generate_messages_cpp)
