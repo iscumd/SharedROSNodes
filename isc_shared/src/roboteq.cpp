@@ -158,7 +158,7 @@ int main(int argc, char **argv){
 	// Serial port parameter
 	n.param("serial_port", port, std::string("/dev/ttyUSB0"));
 
-	ros::Subscriber driveModeSub = n.subscribe("wheelSpeeds", 5, driveModeCallback);
+	ros::Subscriber driveModeSub = n.subscribe("motors/wheel_speeds", 5, driveModeCallback);
 
 	ros::Rate loopRate(100); //Hz
 	while(ros::ok()) {

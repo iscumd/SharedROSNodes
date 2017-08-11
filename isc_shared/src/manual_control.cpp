@@ -1,6 +1,6 @@
 #include "ros/ros.h"
 #include "geometry_msgs/Twist.h"
-#include "isc_shared/joystick.h"
+#include "isc_shared/xinput.h"
 
 #include <string>
 
@@ -14,7 +14,7 @@ double turnMultiplier;
 
 bool enableLogging;
 
-void joystickCallback(const isc_shared::joystick::ConstPtr& joy){
+void joystickCallback(const isc_shared::xinput::ConstPtr& joy){	
 	/* This fires every time a button is pressed/released
 	and when an axis changes (even if it doesn't leave the
 	deadzone). */
@@ -51,9 +51,9 @@ int main(int argc, char **argv){
 	n.param("manual_control_speed_multiplier", speedMultiplier, 1.0);
 	n.param("manual_control_turn_multiplier", turnMultiplier, 0.5);
 
-	manualPub = n.advertise<geometry_msgs::Twist>("manualControl", 5);
+	manualPub = n.advertise<geometry_msgs::Twist>("manual_control", 5);
 
-	ros::Subscriber joystickSub = n.subscribe("joystick", 5, joystickCallback);
+	ros::Subscriber joystickSub = n.subscribe("joystick/xbox360", 5, joystickCallback);
 
 	ros::spin();
 
