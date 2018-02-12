@@ -1,5 +1,5 @@
 #include "ros/ros.h"
-#include "isc_shared/wheel_speeds.h"
+#include "isc_shared_msgs/wheel_speeds.h"
 
 #include <math.h>
 #include <serial/serial.h>
@@ -21,7 +21,7 @@ bool roboteqIsConnected = false;
 double leftSpeed = 0, rightSpeed = 0;
 bool enableLogging;
 
-void driveModeCallback(const isc_shared::wheel_speeds::ConstPtr& msg){	
+void driveModeCallback(const isc_shared_msgs::wheel_speeds::ConstPtr& msg){	
 	/* This fires every time a button is pressed/released
 	and when an axis changes (even if it doesn't leave the
 	deadzone). */
@@ -146,7 +146,7 @@ void move(){
 }
 
 int main(int argc, char **argv){
-	ros::init(argc, argv, "roboteq_nextgen");
+	ros::init(argc, argv, "roboteq_mdc2460");
 
 	ros::NodeHandle n;
 
