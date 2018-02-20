@@ -1,18 +1,19 @@
 cmake_minimum_required(VERSION 2.8.3)
-project(isc_shared)
+project(isc_roboteq_mdc2460)
+
+## Compile as C++11, supported in ROS Kinetic and newer
+# add_compile_options(-std=c++11)
 
 ## Find catkin macros and libraries
 ## if COMPONENTS list like find_package(catkin REQUIRED COMPONENTS xyz)
 ## is used, also find other catkin packages
 find_package(catkin REQUIRED COMPONENTS
-  joy
-  message_generation
-  roscpp
-  rospy
+  isc_shared_msgs
   serial
   serial_utils
+#  message_generation
+  roscpp
   std_msgs
-  sensor_msgs
 )
 
 ## System dependencies are found with CMake's conventions
@@ -49,17 +50,18 @@ find_package(catkin REQUIRED COMPONENTS
 ##   * add every package in MSG_DEP_SET to generate_messages(DEPENDENCIES ...)
 
 ## Generate messages in the 'msg' folder
-add_message_files(
-  FILES
-  drive_mode.msg
-  wheel_speeds.msg
-  xinput.msg
-)
+# add_message_files(
+#   FILES
+#   Message1.msg
+#   Message2.msg
+# )
 
 ## Generate services in the 'srv' folder
-#add_service_files(
-#  FILES
-#)
+# add_service_files(
+#   FILES
+#   Service1.srv
+#   Service2.srv
+# )
 
 ## Generate actions in the 'action' folder
 # add_action_files(
@@ -69,11 +71,10 @@ add_message_files(
 # )
 
 ## Generate added messages and services with any dependencies listed here
-generate_messages(
-  DEPENDENCIES
-  std_msgs
-  sensor_msgs
-)
+# generate_messages(
+#   DEPENDENCIES
+#   isc_shared_msgs#   std_msgs
+# )
 
 ################################################
 ## Declare ROS dynamic reconfigure parameters ##
@@ -100,14 +101,14 @@ generate_messages(
 ###################################
 ## The catkin_package macro generates cmake config files for your package
 ## Declare things to be passed to dependent projects
-## INCLUDE_DIRS: uncomment this if you package contains header files
+## INCLUDE_DIRS: uncomment this if your package contains header files
 ## LIBRARIES: libraries you create in this project that dependent projects also need
 ## CATKIN_DEPENDS: catkin_packages dependent projects also need
 ## DEPENDS: system dependencies of this project that dependent projects also need
 catkin_package(
 #  INCLUDE_DIRS include
-#  LIBRARIES isc_shared
-  CATKIN_DEPENDS joy message_runtime roscpp rospy serial serial_utils std_msgs sensor_msgs
+#  LIBRARIES isc_roboteq_mdc2460
+  CATKIN_DEPENDS isc_shared_msgs serial serial_utils roscpp std_msgs #message_runtime
 #  DEPENDS system_lib
 )
 
@@ -117,53 +118,45 @@ catkin_package(
 
 ## Specify additional locations of header files
 ## Your package locations should be listed before other locations
-# include_directories(include)
 include_directories(
+# include
   ${catkin_INCLUDE_DIRS}
 )
 
 ## Declare a C++ library
-# add_library(isc_shared
-#   src/${PROJECT_NAME}/isc_shared.cpp
+# add_library(${PROJECT_NAME}
+#   src/${PROJECT_NAME}/isc_roboteq_mdc2460.cpp
 # )
 
 ## Add cmake target dependencies of the library
 ## as an example, code may need to be generated before libraries
 ## either from message generation or dynamic reconfigure
-# add_dependencies(isc_shared ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
+# add_dependencies(${PROJECT_NAME} ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
 
 ## Declare a C++ executable
-# add_executable(isc_shared_node src/isc_shared_node.cpp)
+## With catkin_make all packages are built within a single CMake context
+## The recommended prefix ensures that target names across packages don't collide
+# add_executable(${PROJECT_NAME}_node src/isc_roboteq_mdc2460_node.cpp)
+
+## Rename C++ executable without prefix
+## The above recommended prefix causes long target names, the following renames the
+## target back to the shorter version for ease of user use
+## e.g. "rosrun someones_pkg node" instead of "rosrun someones_pkg someones_pkg_node"
+# set_target_properties(${PROJECT_NAME}_node PROPERTIES OUTPUT_NAME node PREFIX "")
 
 ## Add cmake target dependencies of the executable
 ## same as for the library above
-# add_dependencies(isc_shared_node ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
+# add_dependencies(${PROJECT_NAME}_node ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
 
 ## Specify libraries to link a library or executable target against
-# target_link_libraries(isc_shared_node
+# target_link_libraries(${PROJECT_NAME}_node
 #   ${catkin_LIBRARIES}
 # )
 
-# ADD NEW CPPs HERE
-add_executable(basic_drive_mode_control src/basic_drive_mode_control.cpp)
-add_dependencies(basic_drive_mode_control ${PROJECT_NAME}_generate_messages_cpp)
-target_link_libraries(basic_drive_mode_control ${catkin_LIBRARIES})
-
-add_executable(joystick_xbox360 src/joystick_xbox360.cpp)
-add_dependencies(joystick_xbox360 ${PROJECT_NAME}_generate_messages_cpp)
-target_link_libraries(joystick_xbox360 ${catkin_LIBRARIES})
-
-add_executable(manual_control src/manual_control.cpp)
-add_dependencies(manual_control ${PROJECT_NAME}_generate_messages_cpp)
-target_link_libraries(manual_control ${catkin_LIBRARIES})
-
-add_executable(roboteq src/roboteq.cpp)
-add_dependencies(roboteq ${PROJECT_NAME}_generate_messages_cpp)
-target_link_libraries(roboteq ${serial_LIBRARIES} ${serial_utils_LIBRARIES} ${catkin_LIBRARIES})
-
-add_executable(roboteq_nextgen src/roboteq_nextgen.cpp)
-add_dependencies(roboteq_nextgen ${PROJECT_NAME}_generate_messages_cpp)
-target_link_libraries(roboteq_nextgen ${serial_LIBRARIES} ${serial_utils_LIBRARIES} ${catkin_LIBRARIES})
+add_executable(roboteq_mdc2460 src/roboteq_mdc2460.cpp)
+#add_dependencies(roboteq_mdc2460 ${PROJECT_NAME}_generate_messages_cpp)
+add_dependencies(roboteq_mdc2460 ${catkin_EXPORTED_TARGETS})
+target_link_libraries(roboteq_mdc2460 ${serial_LIBRARIES} ${serial_utils_LIBRARIES} ${catkin_LIBRARIES})
 
 #############
 ## Install ##
@@ -180,7 +173,7 @@ target_link_libraries(roboteq_nextgen ${serial_LIBRARIES} ${serial_utils_LIBRARI
 # )
 
 ## Mark executables and/or libraries for installation
-# install(TARGETS isc_shared isc_shared_node
+# install(TARGETS ${PROJECT_NAME} ${PROJECT_NAME}_node
 #   ARCHIVE DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
 #   LIBRARY DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
 #   RUNTIME DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
@@ -205,7 +198,7 @@ target_link_libraries(roboteq_nextgen ${serial_LIBRARIES} ${serial_utils_LIBRARI
 #############
 
 ## Add gtest based cpp test target and link libraries
-# catkin_add_gtest(${PROJECT_NAME}-test test/test_isc_shared.cpp)
+# catkin_add_gtest(${PROJECT_NAME}-test test/test_isc_roboteq_mdc2460.cpp)
 # if(TARGET ${PROJECT_NAME}-test)
 #   target_link_libraries(${PROJECT_NAME}-test ${PROJECT_NAME})
 # endif()

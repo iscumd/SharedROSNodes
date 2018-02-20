@@ -53,7 +53,7 @@ int main(int argc, char **argv){
 
 	manualPub = n.advertise<geometry_msgs::Twist>("manual_control", 5);
 
-	ros::Subscriber joystickSub = n.subscribe("joystick/xbox360", 5, joystickCallback);
+	ros::Subscriber joystickSub = n.subscribe("joystick/xinput", 5, joystickCallback);
 
 	ros::spin();
 

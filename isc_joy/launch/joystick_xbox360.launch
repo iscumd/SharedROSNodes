@@ -1,0 +1,5 @@
+<launch>
+	<node pkg="joy" type="joy_node" name="joy_node" />
+	<node pkg="isc_joy" type="joystick_xbox360" name="joystick_xbox360"/>
+	<node pkg="isc_joy" type="manual_control" name="manual_control" output="screen"/>
+</launch>

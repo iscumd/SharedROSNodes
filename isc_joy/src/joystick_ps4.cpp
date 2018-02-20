@@ -2,18 +2,19 @@
 #include "isc_shared/xinput.h"
 #include "sensor_msgs/Joy.h"
 
-// Xbox 360 wireless uses WIRED indexes http://wiki.ros.org/joy
+// Square and Triangle are swapped from the X and Y mappings on the Xbox 360
+// The triggers also activate buttons 6 and 7
 #define BUTTON_A joy->buttons[0]
 #define BUTTON_B joy->buttons[1]
-#define BUTTON_X joy->buttons[2]
-#define BUTTON_Y joy->buttons[3]
+#define BUTTON_X joy->buttons[3]
+#define BUTTON_Y joy->buttons[2]
 #define BUTTON_LB joy->buttons[4]
 #define BUTTON_RB joy->buttons[5]
-#define BUTTON_BACK joy->buttons[6]
-#define BUTTON_START joy->buttons[7]
-#define BUTTON_GUIDE joy->buttons[8]
-#define BUTTON_LS joy->buttons[9]
-#define BUTTON_RS joy->buttons[10]
+#define BUTTON_BACK joy->buttons[8]
+#define BUTTON_START joy->buttons[9]
+#define BUTTON_GUIDE joy->buttons[10]
+#define BUTTON_LS joy->buttons[11]
+#define BUTTON_RS joy->buttons[12]
 
 #define AXIS_L_LR joy->axes[0]
 #define AXIS_L_UD joy->axes[1]
@@ -57,11 +58,11 @@ void joystickCallback(const sensor_msgs::Joy::ConstPtr& joy){
 }
 
 int main(int argc, char **argv){
-	ros::init(argc, argv, "joystick_xbox360");
+	ros::init(argc, argv, "joystick_ps4");
 
 	ros::NodeHandle n;
 
-	joystickPub = n.advertise<isc_shared::xinput>("joystick/xbox360", 1000);
+	joystickPub = n.advertise<isc_shared::xinput>("joystick/xinput", 1000);
 	ros::Subscriber sub = n.subscribe("joy", 1000, joystickCallback);
 
 	ros::spin();
