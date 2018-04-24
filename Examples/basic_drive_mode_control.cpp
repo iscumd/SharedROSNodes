@@ -38,12 +38,7 @@ void joystickCallback(const isc_shared_msgs::xinput::ConstPtr& joy){
 		updateDriveModeParameter();
 		ROS_INFO("Drive Mode Control: Switching to %s mode.", autoMode ? "AUTO" : "MANUAL");
 	}
-	if(startButtonDown && !joy->Start){ //The Start button has been released
-		startButtonDown = false;
-		autoMode = !autoMode;
-		updateDriveModeParameter();
-		ROS_INFO("Drive Mode Control: Switching to %s mode.", autoMode ? "AUTO" : "MANUAL");
-	}
+
 	speedBoostButton = joy->LS;//mike added this 6/3
 
 }
