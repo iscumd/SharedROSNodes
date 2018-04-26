@@ -1,5 +1,5 @@
 #include "ros/ros.h"
-#include "isc_shared/xinput.h"
+#include "isc_joy/xinput.h"
 #include "sensor_msgs/Joy.h"
 
 // Xbox 360 wireless uses WIRED indexes http://wiki.ros.org/joy
@@ -31,7 +31,7 @@ void joystickCallback(const sensor_msgs::Joy::ConstPtr& joy){
 	and when an axis changes (even if it doesn't leave the
 	deadzone). */
 	
-	isc_shared::xinput msg;
+	isc_joy::xinput msg;
 	msg.A = BUTTON_A;
 	msg.B = BUTTON_B;
 	msg.X = BUTTON_X;
@@ -61,7 +61,7 @@ int main(int argc, char **argv){
 
 	ros::NodeHandle n;
 
-	joystickPub = n.advertise<isc_shared::xinput>("joystick/xinput", 1000);
+	joystickPub = n.advertise<isc_joy::xinput>("joystick/xinput", 1000);
 	ros::Subscriber sub = n.subscribe("joy", 1000, joystickCallback);
 
 	ros::spin();

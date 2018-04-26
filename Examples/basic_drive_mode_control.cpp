@@ -1,6 +1,6 @@
 #include "ros/ros.h"
 #include "geometry_msgs/Twist.h"
-#include "isc_shared_msgs/xinput.h"
+#include "isc_joy/xinput.h"
 #include "isc_shared_msgs/wheel_speeds.h"
 
 #include <sstream>
@@ -21,7 +21,7 @@ void updateDriveModeParameter(){
 	}
 }
 
-void joystickCallback(const isc_shared_msgs::xinput::ConstPtr& joy){
+void joystickCallback(const isc_joy::xinput::ConstPtr& joy){
 	/* This fires every time a button is pressed/released
 	and when an axis changes (even if it doesn't leave the
 	deadzone). */

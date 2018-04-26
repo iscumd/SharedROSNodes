@@ -100,3 +100,6 @@ qtcreator-*
 
 # Catkin custom files
 CATKIN_IGNORE
+
+# Specific files
+isc_joy/launch/mac.launch
