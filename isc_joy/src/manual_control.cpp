@@ -1,6 +1,6 @@
 #include "ros/ros.h"
 #include "geometry_msgs/Twist.h"
-#include "isc_shared/xinput.h"
+#include "isc_joy/xinput.h"
 
 #include <string>
 
@@ -14,7 +14,7 @@ double turnMultiplier;
 
 bool enableLogging;
 
-void joystickCallback(const isc_shared::xinput::ConstPtr& joy){	
+void joystickCallback(const isc_joy::xinput::ConstPtr& joy){	
 	/* This fires every time a button is pressed/released
 	and when an axis changes (even if it doesn't leave the
 	deadzone). */
