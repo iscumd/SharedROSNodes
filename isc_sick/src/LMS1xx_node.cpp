@@ -28,6 +28,7 @@ int main(int argc, char **argv)
   std::string host;
   std::string frame_id;
   int port;
+  bool tf_correction;
 
   ros::init(argc, argv, "lms1xx");
   ros::NodeHandle nh;
@@ -37,6 +38,7 @@ int main(int argc, char **argv)
   n.param<std::string>("host", host, "192.168.0.100");
   n.param<std::string>("frame_id", frame_id, "laser");
   n.param<int>("port", port, 2111);
+  n.param<bool>("use_tf_correction", tf_correction, false); // whether or not to correct sick angles for use in tf
 
   while (ros::ok())
   {
@@ -74,13 +76,16 @@ int main(int argc, char **argv)
     scan_msg.range_max = 20.0;
     scan_msg.scan_time = 100.0 / cfg.scaningFrequency;
     scan_msg.angle_increment = ((double)outputRange.angleResolution / 2) / 10000.0 * DEG2RAD;
-    scan_msg.angle_min = ((double)cfg.startAngle ) / 10000.0 * DEG2RAD ;
-    scan_msg.angle_max =  ((double)cfg.stopAngle ) / 10000.0 * DEG2RAD ;
+	if(tf_correction) {
+		scan_msg.angle_min = ((((double)cfg.startAngle) / 10000.0) - 90.0) * DEG2RAD;
+    	scan_msg.angle_max = ((((double)cfg.stopAngle) / 10000.0) - 90.0) * DEG2RAD;
+	} else {
+    	scan_msg.angle_min = ((double)cfg.startAngle ) / 10000.0 * DEG2RAD;
+    	scan_msg.angle_max = ((double)cfg.stopAngle ) / 10000.0 * DEG2RAD;
+	}
 
     ROS_DEBUG_STREAM("Device resolution is " << (double)outputRange.angleResolution / 10000.0 << " degrees.");
     ROS_DEBUG_STREAM("Device frequency is " << (double)cfg.scaningFrequency / 100.0 << " Hz");
-
-
 
     int angle_range = outputRange.stopAngle - outputRange.startAngle;
     int num_values;
