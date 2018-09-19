@@ -76,13 +76,13 @@ int main(int argc, char **argv)
     scan_msg.range_max = 20.0;
     scan_msg.scan_time = 100.0 / cfg.scaningFrequency;
     scan_msg.angle_increment = ((double)outputRange.angleResolution / 2) / 10000.0 * DEG2RAD;
-	if(tf_correction) {
-		scan_msg.angle_min = ((((double)cfg.startAngle) / 10000.0) - 90.0) * DEG2RAD;
+    if(tf_correction) {
+	scan_msg.angle_min = ((((double)cfg.startAngle) / 10000.0) - 90.0) * DEG2RAD;
     	scan_msg.angle_max = ((((double)cfg.stopAngle) / 10000.0) - 90.0) * DEG2RAD;
-	} else {
+    } else {
     	scan_msg.angle_min = ((double)cfg.startAngle ) / 10000.0 * DEG2RAD;
     	scan_msg.angle_max = ((double)cfg.stopAngle ) / 10000.0 * DEG2RAD;
-	}
+    }
 
     ROS_DEBUG_STREAM("Device resolution is " << (double)outputRange.angleResolution / 10000.0 << " degrees.");
     ROS_DEBUG_STREAM("Device frequency is " << (double)cfg.scaningFrequency / 100.0 << " Hz");
