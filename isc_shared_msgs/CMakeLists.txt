@@ -52,6 +52,7 @@ add_message_files(
   FILES
   drive_mode.msg
   wheel_speeds.msg
+  EncoderCounts.msg
 )
 
 ## Generate services in the 'srv' folder
