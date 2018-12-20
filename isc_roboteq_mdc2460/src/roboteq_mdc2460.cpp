@@ -160,7 +160,7 @@ int main(int argc, char **argv){
 	ros::Subscriber driveModeSub = n.subscribe("motors/wheel_speeds", 5, driveModeCallback);
 	ros::Publisher pub = n.advertise<isc_shared_msgs::EncoderCounts>("encoder_counts", 1000);
 	bool hasEncoder;
-	n.param::get("has_encoder", hasEncoder, false);
+	n.param("has_encoder", hasEncoder, false);
 	isc_shared_msgs::EncoderCounts count;
 
 	ros::Rate loopRate(100); //Hz
