@@ -1,5 +1,6 @@
 #include "ros/ros.h"
 #include "isc_shared_msgs/wheel_speeds.h"
+#include "isc_shared_msgs/EncoderCounts.h"
 
 #include <math.h>
 #include <serial/serial.h>
@@ -102,6 +103,8 @@ inline bool isPlusOrMinus(const string &token) {
 	return false;
 }
 
+int checkEncoderCount(int channel){return 0;}
+
 bool sendCommand(string command){
 	BufferedFilterPtr echoFilter = serialListener.createBufferedFilter(SerialListener::exactly(command));
 	if(enableLogging) ROS_INFO("Sending commend: %s", command.c_str());
@@ -155,6 +158,10 @@ int main(int argc, char **argv){
 	n.param("roboteq_enable_logging", enableLogging, false);
 
 	ros::Subscriber driveModeSub = n.subscribe("motors/wheel_speeds", 5, driveModeCallback);
+	ros::Publisher pub = n.advertise<isc_shared_msgs::EncoderCounts>("encoder_counts", 1000);
+	bool hasEncoder;
+	n.param::get("has_encoder", hasEncoder, false);
+	isc_shared_msgs::EncoderCounts count;
 
 	ros::Rate loopRate(100); //Hz
 	while(ros::ok()) {
@@ -169,6 +176,13 @@ int main(int argc, char **argv){
 		while(roboteqIsConnected && ros::ok()){
 			ros::spinOnce();
 			move();
+			
+			if(hasEncoder){
+				count.left_count = checkEncoderCount(1);
+				count.right_count = checkEncoderCount(2);
+				pub.publish(count);
+			}
+
 			loopRate.sleep();
 		}
 
