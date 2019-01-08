@@ -1,3 +1,3 @@
 Header header
-int left_count
-int right_count
+int32 left_count
+int32 right_count
