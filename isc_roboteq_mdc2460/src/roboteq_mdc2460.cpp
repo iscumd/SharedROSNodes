@@ -7,7 +7,6 @@
 #include <serial/utils/serial_listener.h>
 #include <sstream>
 #include <string>
-#include <vector>
 
 using std::string;
 using std::stringstream;
