@@ -7,6 +7,7 @@
 #include <serial/utils/serial_listener.h>
 #include <sstream>
 #include <string>
+#include <vector>
 
 using std::string;
 using std::stringstream;
@@ -103,24 +104,36 @@ inline bool isPlusOrMinus(const string &token) {
 	return false;
 }
 
-int checkEncoderCount(int channel){return 0;}
+int checkEncoderCount(int channel)
+{
+	command_result = sendCommand(stringFormat("?CR %i", channel), "CR=")
+	//The result will always have first 3 characters as 'CR='.
+	//So the count we need starts from the 3rd character until the EOL.
+	string count = command_result.substr(3);
+	return std::stoi(count);
+}
 
-bool sendCommand(string command){
+string sendCommand(string command, string response)
+{
 	BufferedFilterPtr echoFilter = serialListener.createBufferedFilter(SerialListener::exactly(command));
-	if(enableLogging) ROS_INFO("Sending commend: %s", command.c_str());
+	if(enableLogging) ROS_INFO("Sending command: %s", command.c_str());
 	serialPort->write(command+"\r");
 	if (echoFilter->wait(50).empty()) {
 		ROS_ERROR("Failed to receive an echo from the Roboteq.");
-		return false;
+		return '';
 	}
+	BufferedFilterPtr responseFilter = serialListener.createBufferedFilter(SerialListener::contains(response));
+	string result = responseFilter->wait(100);
+	return result;
+}
+
+bool sendSpeed(string command)
+{
+	string echoCommand = sendCommand(command, "+");
 	BufferedFilterPtr plusMinusFilter = serialListener.createBufferedFilter(isPlusOrMinus);
 	string result = plusMinusFilter->wait(100);
 	if(result != "+"){
-		if(result == "-"){
-			ROS_ERROR("The Roboteq rejected the command.");
-			return false;
-		}
-		//ROS_ERROR("Did not receive a confirmation or rejection from the Roboteq.");
+		ROS_ERROR("The Roboteq rejected the command.");
 		return false;
 	}
 	return true;
@@ -144,8 +157,8 @@ void move(){
 		return;
 	}
 
-	sendCommand(stringFormat("!G 1 %f", constrainSpeed(rightSpeed)));
-	sendCommand(stringFormat("!G 2 %f", constrainSpeed(leftSpeed)));
+	sendSpeed(stringFormat("!G 1 %f", constrainSpeed(rightSpeed)));
+	sendSpeed(stringFormat("!G 2 %f", constrainSpeed(leftSpeed)));
 }
 
 int main(int argc, char **argv){
