@@ -10,6 +10,7 @@
 #include <cstdio>
 #include <LMS1xx/LMS1xx.h>
 #include "ros/ros.h"
+#include <ros/console.h>
 #include "sensor_msgs/LaserScan.h"
 #include <string>
 
