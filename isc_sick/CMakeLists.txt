@@ -2,14 +2,12 @@ cmake_minimum_required(VERSION 2.8.3)
 project(isc_sick)
 
 # Build ROS-independent library.
-find_package(console_bridge REQUIRED)
-include_directories(include ${console_bridge_INCLUDE_DIRS})
 add_library(LMS1xx src/LMS1xx.cpp)
-target_link_libraries(LMS1xx ${console_bridge_LIBRARIES})
+target_link_libraries(LMS1xx)
 
 # Regular catkin package follows.
-find_package(catkin REQUIRED COMPONENTS roscpp sensor_msgs)
-catkin_package(CATKIN_DEPENDS roscpp)
+find_package(catkin REQUIRED COMPONENTS roscpp rosconsole sensor_msgs)
+catkin_package(CATKIN_DEPENDS roscpp rosconsole)
 
 include_directories(include ${catkin_INCLUDE_DIRS})
 add_executable(LMS1xx_node src/LMS1xx_node.cpp)

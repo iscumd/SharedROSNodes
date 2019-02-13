@@ -9,7 +9,7 @@
 #ifndef LMS1XX_LMS_BUFFER_H_
 #define LMS1XX_LMS_BUFFER_H_
 
-#include "console_bridge/console.h"
+#include <ros/console.h>
 #include <stdint.h>
 #include <string.h>
 #include <unistd.h>
@@ -32,12 +32,12 @@ public:
     if (ret > 0)
     {
       total_length_ += ret;
-      logDebug("Read %d bytes from fd, total length is %d.", ret, total_length_);
+      ROS_DEBUG("Read %d bytes from fd, total length is %d.", ret, total_length_);
     }
     else
     {
 
-      logWarn("Buffer read() returned error.");
+      ROS_WARN("Buffer read() returned error.");
     }
   }
 
@@ -46,7 +46,7 @@ public:
     if (total_length_ == 0)
     {
       // Buffer is empty, no scan data present.
-      logDebug("Empty buffer, nothing to return.");
+      ROS_DEBUG("Empty buffer, nothing to return.");
       return NULL;
     }
 
@@ -57,13 +57,13 @@ public:
     if (start_of_message == NULL)
     {
       // None found, buffer reset.
-      logWarn("No STX found, dropping %d bytes from buffer.", total_length_);
+      ROS_WARN("No STX found, dropping %d bytes from buffer.", total_length_);
       total_length_ = 0;
     }
     else if (buffer_ != start_of_message)
     {
       // Start of message found, ahead of the start of buffer. Therefore shift the buffer back.
-      logWarn("Shifting buffer, dropping %d bytes, %d bytes remain.",
+      ROS_WARN("Shifting buffer, dropping %d bytes, %d bytes remain.",
               (start_of_message - buffer_), total_length_ - (start_of_message - buffer_));
       shiftBuffer(start_of_message);
     }
@@ -73,7 +73,7 @@ public:
     if (end_of_first_message_ == NULL)
     {
       // No end of message found, therefore no message to parse and return.
-      logDebug("No ETX found, nothing to return.");
+      ROS_DEBUG("No ETX found, nothing to return.");
       return NULL;
     }
 
