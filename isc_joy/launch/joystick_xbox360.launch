@@ -1,5 +1,19 @@
 <launch>
-	<node pkg="joy" type="joy_node" name="joy_node" />
+	<arg name="joy_dev" default="/dev/input/js0" />
+	<arg name="enable_logging" default="false" />
+	<arg name="speed_multiplier" default="1.0" />
+	<arg name="turn_multiplier" default="0.5" />
+	
+	<!-- joy node -->
+	<node pkg="joy" type="joy_node" name="joy_node">
+		<param name="dev" value="$(arg joy_dev")" />
+	</node>
+
+	<!-- xinput node -->
 	<node pkg="isc_joy" type="joystick_xbox360" name="joystick_xbox360"/>
-	<node pkg="isc_joy" type="manual_control" name="manual_control" output="screen"/>
+
+	<!-- manual control node -->
+	<param name="manual_control_speed_multiplier" value="$(arg speed_multiplier)" />
+	<param name="manual_control_turn_multiplier" value="$(arg turn_multiplier)" />
+	<node pkg="isc_joy" type="manual_control" name="manual_control" />
 </launch>
