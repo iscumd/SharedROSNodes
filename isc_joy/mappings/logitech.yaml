@@ -1,19 +1,20 @@
-# PS4 button mapping
-# Square and triangle are switched around 
+# a blank mapping to serve as a template for new configurations
+# Type refers to whether a control is a Button (0) or an Axis (1). This determines what array the value comes from
+# Index refers to the position of the control in the joy message arrays
 
 mappings:
  A:
   type: 'button'
-  index: 0
+  index: 1
  B:
   type: 'button'
-  index: 1
+  index: 2
  X:
   type: 'button'
-  index: 3
+  index: 0
  Y:
   type: 'button'
-  index: 2
+  index: 3
  LB:
   type: 'button'
   index: 4
@@ -28,13 +29,13 @@ mappings:
   index: 9
  GUIDE:
   type: 'button'
-  index: 10
+  index: -1
  LS:
   type: 'button'
-  index: 11
+  index: 10
  RS:
   type: 'button'
-  index: 12
+  index: 11
  L_LR:
   type: 'axis'
   index: 0
@@ -42,21 +43,21 @@ mappings:
   type: 'axis'
   index: 1
  LT:
-  type: 'axis'
-  index: 2
+  type: 'button'
+  index: 6
  R_LR:
   type: 'axis'
-  index: 3
+  index: 2
  R_UD:
   type: 'axis'
-  index: 4
+  index: 3
  RT:
-  type: 'axis'
-  index: 5
+  type: 'button'
+  index: 7
  DPAD_LR:
   type: 'axis'
-  index: 6
+  index: 4
  DPAD_UD:
   type: 'axis'
-  index: 7
+  index: 5
   

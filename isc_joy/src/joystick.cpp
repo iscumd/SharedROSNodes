@@ -42,8 +42,9 @@ void setup_mappings() {
  
 	for(auto control = controls.begin(); control != controls.end(); ++control) {
 		int tmp;
+		std::string s_tmp;
 		if(n.hasParam("mappings/" + *control + "/type") && n.hasParam("mappings/" + *control + "/index")) { // check if both type and index are present for this control
-			n.getParamCached("mappings/" + *control + "/type", tmp); // cache the params and we don't care about the actual value yet
+			n.getParamCached("mappings/" + *control + "/type", s_tmp); // cache the params and we don't care about the actual value yet
 			n.getParamCached("mappings/" + *control + "/index", tmp); 
 		} else { // if either one is missing, this control is malformed and will not be reported
 			n.setParam("mappings/" + *control + "/type", -1);
@@ -51,7 +52,7 @@ void setup_mappings() {
 
 			ROS_WARN("Malformed or missing mapping for control %s. Control value will be set to 0", control->c_str()); 			
 
-			n.getParamCached("mappings/" + *control + "/type", tmp); // even if a control is missing or malformed, we must cache it to avoid 
+			n.getParamCached("mappings/" + *control + "/type", s_tmp); // even if a control is missing or malformed, we must cache it to avoid 
 			n.getParamCached("mappings/" + *control + "/index", tmp); // the param server lookup
 		}
 	}
@@ -59,34 +60,29 @@ void setup_mappings() {
 
 float get_mapping(std::string control, const sensor_msgs::Joy::ConstPtr &joy) {
 	ros::NodeHandle n("~");
-	control_type type;
+	std::string type;
 	int index;
 	
 	n.getParamCached("mappings/" + control + "/type", type); // since it's cached the lookup is actually very quick
 	n.getParamCached("mappings/" + control + "/index", index);
 
-	ROS_INFO("%s: type=%d, index=%d", control.c_str(), type, index);
+	ROS_INFO("%s: type=%s, index=%d", control.c_str(), type, index);
 
-	switch(type) {
-		case CONTROL_TYPE_BUTTON:
-			if(index < joy->buttons.size() && index >= 0) { return joy->buttons[index]; } // do some quick bounds checking too, just in case index is wrong
-			else {
-				ROS_WARN("%s: index %d is out of bounds", control.c_str(), index);
-				return 0.0;
-			}
-			break;
-
-		case CONTROL_TYPE_AXIS:
-			if(index < joy->axes.size() && index >= 0) { return joy->axes[index]; }
-			else {
-				ROS_WARN("%s: index %d is out of bounds", control.c_str(), index);
-				return 0.0;
-			}
-			break;
-
-		default: // if this control was improperly defined or not defined at all, just report 0 for the control
-			ROS_WARN("%s is badly defined.", control.c_str());			
+	if(type == "button") {
+		if(index < joy->buttons.size() && index >= 0) { return joy->buttons[index]; } // do some quick bounds checking too, just in case index is wrong
+		else {
+			ROS_WARN("%s: index %d is out of bounds", control.c_str(), index);
 			return 0.0;
+		}
+	} else if(type == "axis") {
+		if(index < joy->axes.size() && index >= 0) { return joy->axes[index]; }
+		else {
+			ROS_WARN("%s: index %d is out of bounds", control.c_str(), index);
+			return 0.0;
+		}
+	} else { // if this control was improperly defined or not defined at all, just report 0 for the control
+		ROS_WARN("%s is ill-defined.", control.c_str());			
+		return 0.0;
 	}
 }
 

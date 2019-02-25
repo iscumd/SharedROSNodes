@@ -2,60 +2,60 @@
 
 mappings:
  A:
-  type: 0
+  type: 'button'
   index: 0
  B:
-  type: 0
+  type: 'button'
   index: 1
  X:
-  type: 0
+  type: 'button'
   index: 2
  Y:
-  type: 0
+  type: 'button'
   index: 3
  LB:
-  type: 0
+  type: 'button'
   index: 4
  RB:
-  type: 0
+  type: 'button'
   index: 5
  BACK:
-  type: 0
+  type: 'button'
   index: 6
  START:
-  type: 0
+  type: 'button'
   index: 7
  GUIDE:
-  type: 0
+  type: 'button'
   index: 8
  LS:
-  type: 0
+  type: 'button'
   index: 9
  RS:
-  type: 0
+  type: 'button'
   index: 10
  L_LR:
-  type: 1
+  type: 'axis'
   index: 0
  L_UD:
-  type: 1
+  type: 'axis'
   index: 1
  LT:
-  type: 1
+  type: 'axis'
   index: 2
  R_LR:
-  type: 1
+  type: 'axis'
   index: 3
  R_UD:
-  type: 1
+  type: 'axis'
   index: 4
  RT:
-  type: 1
+  type: 'axis'
   index: 5
  DPAD_LR:
-  type: 1
+  type: 'axis'
   index: 6
  DPAD_UD:
-  type: 1
+  type: 'axis'
   index: 7
   
