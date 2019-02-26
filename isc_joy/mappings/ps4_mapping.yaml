@@ -1,0 +1,62 @@
+# PS4 button mapping
+# Square and triangle are switched around 
+
+mappings:
+ A:
+  type: 'button'
+  index: 0
+ B:
+  type: 'button'
+  index: 1
+ X:
+  type: 'button'
+  index: 3
+ Y:
+  type: 'button'
+  index: 2
+ LB:
+  type: 'button'
+  index: 4
+ RB:
+  type: 'button'
+  index: 5
+ BACK:
+  type: 'button'
+  index: 8
+ START:
+  type: 'button'
+  index: 9
+ GUIDE:
+  type: 'button'
+  index: 10
+ LS:
+  type: 'button'
+  index: 11
+ RS:
+  type: 'button'
+  index: 12
+ L_LR:
+  type: 'axis'
+  index: 0
+ L_UD:
+  type: 'axis'
+  index: 1
+ LT:
+  type: 'axis'
+  index: 2
+ R_LR:
+  type: 'axis'
+  index: 3
+ R_UD:
+  type: 'axis'
+  index: 4
+ RT:
+  type: 'axis'
+  index: 5
+ DPAD_LR:
+  type: 'axis'
+  index: 6
+ DPAD_UD:
+  type: 'axis'
+  index: 7
+  

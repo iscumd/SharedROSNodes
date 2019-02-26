@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 2.8.3)
 project(isc_joy)
 
 ## Compile as C++11, supported in ROS Kinetic and newer
-# add_compile_options(-std=c++11)
+add_compile_options(-std=c++11)
 
 ## Find catkin macros and libraries
 ## if COMPONENTS list like find_package(catkin REQUIRED COMPONENTS xyz)
@@ -154,13 +154,9 @@ include_directories(
 #   ${catkin_LIBRARIES}
 # )
 
-add_executable(joystick_xbox360 src/joystick_xbox360.cpp)
+add_executable(joystick_xbox360 src/joystick.cpp) # keep previous name for backwards compat?
 add_dependencies(joystick_xbox360 ${PROJECT_NAME}_generate_messages_cpp)
 target_link_libraries(joystick_xbox360 ${catkin_LIBRARIES})
-
-add_executable(joystick_ps4 src/joystick_ps4.cpp)
-add_dependencies(joystick_ps4 ${PROJECT_NAME}_generate_messages_cpp)
-target_link_libraries(joystick_ps4 ${catkin_LIBRARIES})
 
 add_executable(manual_control src/manual_control.cpp)
 add_dependencies(manual_control ${PROJECT_NAME}_generate_messages_cpp)
