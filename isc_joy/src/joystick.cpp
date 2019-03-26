@@ -66,7 +66,7 @@ float get_mapping(std::string control, const sensor_msgs::Joy::ConstPtr &joy) {
 	n.getParamCached("mappings/" + control + "/type", type); // since it's cached the lookup is actually very quick
 	n.getParamCached("mappings/" + control + "/index", index);
 
-	ROS_INFO("%s: type=%s, index=%d", control.c_str(), type, index);
+	ROS_INFO("%s: type=%s, index=%d", control.c_str(), type.c_str(), index);
 
 	if(type == "button") {
 		if(index < joy->buttons.size() && index >= 0) { return joy->buttons[index]; } // do some quick bounds checking too, just in case index is wrong
