@@ -20,6 +20,7 @@ serial::Serial *serialPort;
 serial::utils::SerialListener serialListener;
 bool roboteqIsConnected = false;
 double leftSpeed = 0, rightSpeed = 0;
+double gearReduction = 1.0;
 bool enableLogging;
 
 void driveModeCallback(const isc_shared_msgs::wheel_speeds::ConstPtr& msg){	
@@ -169,6 +170,7 @@ int main(int argc, char **argv){
 	// Serial port parameter
 	n.param("serial_port", port, std::string("/dev/ttyUSB0"));
 	n.param("roboteq_enable_logging", enableLogging, false);
+	n.param("gear_reduction", gearReduction, 1.0);
 
 	ros::Subscriber driveModeSub = n.subscribe("motors/wheel_speeds", 5, driveModeCallback);
 	ros::Publisher pub = n.advertise<isc_shared_msgs::EncoderCounts>("encoder_counts", 1000);
@@ -191,8 +193,8 @@ int main(int argc, char **argv){
 			move();
 			
 			if(hasEncoder){
-				count.left_count = checkEncoderCount(1);
-				count.right_count = checkEncoderCount(2);
+				count.left_count = checkEncoderCount(1) / gearReduction;
+				count.right_count = checkEncoderCount(2) / gearReduction;
 				pub.publish(count);
 			}
 
