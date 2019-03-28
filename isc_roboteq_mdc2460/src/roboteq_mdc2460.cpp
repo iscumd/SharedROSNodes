@@ -103,15 +103,6 @@ inline bool isPlusOrMinus(const string &token) {
 	return false;
 }
 
-int checkEncoderCount(int channel)
-{
-	command_result = sendCommand(stringFormat("?CR %i", channel), "CR=")
-	//The result will always have first 3 characters as 'CR='.
-	//So the count we need starts from the 3rd character until the EOL.
-	string count = command_result.substr(3);
-	return std::stoi(count);
-}
-
 string sendCommand(string command, string response)
 {
 	BufferedFilterPtr echoFilter = serialListener.createBufferedFilter(SerialListener::exactly(command));
@@ -119,11 +110,21 @@ string sendCommand(string command, string response)
 	serialPort->write(command+"\r");
 	if (echoFilter->wait(50).empty()) {
 		ROS_ERROR("Failed to receive an echo from the Roboteq.");
-		return '';
+		return "";
 	}
 	BufferedFilterPtr responseFilter = serialListener.createBufferedFilter(SerialListener::contains(response));
 	string result = responseFilter->wait(100);
 	return result;
+}
+
+
+int checkEncoderCount(int channel)
+{
+	string command_result = sendCommand(stringFormat("?CR %i", channel), "CR=");
+	//The result will always have first 3 characters as 'CR='.
+	//So the count we need starts from the 3rd character until the EOL.
+	string count = command_result.substr(3);
+	return std::stoi(count);
 }
 
 bool sendSpeed(string command)
