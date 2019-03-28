@@ -20,6 +20,7 @@ serial::Serial *serialPort;
 serial::utils::SerialListener serialListener;
 bool roboteqIsConnected = false;
 double leftSpeed = 0, rightSpeed = 0;
+double gearReduction = 1.0;
 bool enableLogging;
 
 void driveModeCallback(const isc_shared_msgs::wheel_speeds::ConstPtr& msg){	
@@ -103,15 +104,6 @@ inline bool isPlusOrMinus(const string &token) {
 	return false;
 }
 
-int checkEncoderCount(int channel)
-{
-	command_result = sendCommand(stringFormat("?CR %i", channel), "CR=")
-	//The result will always have first 3 characters as 'CR='.
-	//So the count we need starts from the 3rd character until the EOL.
-	string count = command_result.substr(3);
-	return std::stoi(count);
-}
-
 string sendCommand(string command, string response)
 {
 	BufferedFilterPtr echoFilter = serialListener.createBufferedFilter(SerialListener::exactly(command));
@@ -119,11 +111,21 @@ string sendCommand(string command, string response)
 	serialPort->write(command+"\r");
 	if (echoFilter->wait(50).empty()) {
 		ROS_ERROR("Failed to receive an echo from the Roboteq.");
-		return '';
+		return "";
 	}
 	BufferedFilterPtr responseFilter = serialListener.createBufferedFilter(SerialListener::contains(response));
 	string result = responseFilter->wait(100);
 	return result;
+}
+
+
+int checkEncoderCount(int channel)
+{
+	string command_result = sendCommand(stringFormat("?CR %i", channel), "CR=");
+	//The result will always have first 3 characters as 'CR='.
+	//So the count we need starts from the 3rd character until the EOL.
+	string count = command_result.substr(3);
+	return std::stoi(count);
 }
 
 bool sendSpeed(string command)
@@ -168,6 +170,7 @@ int main(int argc, char **argv){
 	// Serial port parameter
 	n.param("serial_port", port, std::string("/dev/ttyUSB0"));
 	n.param("roboteq_enable_logging", enableLogging, false);
+	n.param("gear_reduction", gearReduction, 1.0);
 
 	ros::Subscriber driveModeSub = n.subscribe("motors/wheel_speeds", 5, driveModeCallback);
 	ros::Publisher pub = n.advertise<isc_shared_msgs::EncoderCounts>("encoder_counts", 1000);
@@ -190,8 +193,8 @@ int main(int argc, char **argv){
 			move();
 			
 			if(hasEncoder){
-				count.left_count = checkEncoderCount(1);
-				count.right_count = checkEncoderCount(2);
+				count.left_count = checkEncoderCount(1) / gearReduction;
+				count.right_count = checkEncoderCount(2) / gearReduction;
 				pub.publish(count);
 			}
 
