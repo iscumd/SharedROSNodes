@@ -1,5 +1,0 @@
-<launch>
-	<include file="$(find isc_joy)/launch/joystick_xbox360.launch">
-		<arg name="joy_dev" value="/dev/input/js1" />
-	</include>
-</launch>

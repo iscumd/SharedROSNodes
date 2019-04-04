@@ -6,7 +6,7 @@ This package targets ROS Kinetic.
 
 1. Open a console and source your catkin workspace.
 2. Change directory to `your_catkin_workspace/src`
-3. Run `git clone https://github.com/iscumd/SharedROSNodes.git`
+3. Run `git clone --recurse-submodules https://github.com/iscumd/SharedROSNodes.git`
 4. Change directory to the root of your workspace (if you're in `your_catkin_workspace/src`, run `cd ..`).
 5. Run `rosdep install --from-paths src --ignore-src -r -y` to install the packages' dependancies.
 6. Run `catkin_make` to build the packages.
