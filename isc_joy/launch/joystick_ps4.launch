@@ -1,8 +1,0 @@
-<launch>
-	<node pkg="joy" type="joy_node" name="joy_node">
-		<!-- js0 is the sixaxis part of the controller -->
-		<param name="dev" value="/dev/input/js1" />
-	</node>
-	<node pkg="isc_joy" type="joystick_ps4" name="joystick_ps4"/>
-	<node pkg="isc_joy" type="manual_control" name="manual_control" output="screen"/>
-</launch>
