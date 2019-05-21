@@ -11,6 +11,7 @@ find_package(catkin REQUIRED COMPONENTS
   isc_shared_msgs
   serial
   serial_utils
+  geometry_msgs
 #  message_generation
   roscpp
   std_msgs
@@ -108,7 +109,7 @@ find_package(catkin REQUIRED COMPONENTS
 catkin_package(
 #  INCLUDE_DIRS include
 #  LIBRARIES isc_roboteq_mdc2460
-  CATKIN_DEPENDS isc_shared_msgs serial serial_utils roscpp std_msgs #message_runtime
+  CATKIN_DEPENDS isc_shared_msgs serial serial_utils roscpp std_msgs geometry_msgs #message_runtime
 #  DEPENDS system_lib
 )
 
