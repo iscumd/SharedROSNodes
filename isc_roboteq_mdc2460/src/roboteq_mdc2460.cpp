@@ -1,5 +1,5 @@
-#include "ros/ros.h"
-#include "isc_shared_msgs/wheel_speeds.h"
+#include <ros/ros.h>
+#include <geometry_msgs/Twist.h>
 #include "isc_shared_msgs/EncoderCounts.h"
 
 #include <math.h>
@@ -23,14 +23,14 @@ double leftSpeed = 0, rightSpeed = 0;
 double gearReduction = 1.0;
 bool enableLogging;
 
-void driveModeCallback(const isc_shared_msgs::wheel_speeds::ConstPtr& msg){	
+void driveModeCallback(const geometry_msgs::Twist::ConstPtr &msg){	
 	/* This fires every time a button is pressed/released
 	and when an axis changes (even if it doesn't leave the
 	deadzone). */
 	float speedMultiplier = 1000.0; 
 
-	leftSpeed = msg->left * speedMultiplier;
-	rightSpeed = msg->right * speedMultiplier;
+	leftSpeed = (msg->linear.x - msg->angular.z) * speedMultiplier;
+	rightSpeed = (msg->linear.x + msg->angular.z) * speedMultiplier;
 	
 	if(enableLogging) ROS_INFO("Roboteq: left wheel=%f right wheel=%f", leftSpeed, rightSpeed);
 }
@@ -172,10 +172,10 @@ int main(int argc, char **argv){
 	n.param("roboteq_enable_logging", enableLogging, false);
 	n.param("gear_reduction", gearReduction, 1.0);
 
-	ros::Subscriber driveModeSub = n.subscribe("motors/wheel_speeds", 5, driveModeCallback);
+	ros::Subscriber driveModeSub = n.subscribe("motor_control", 5, driveModeCallback);
 	ros::Publisher pub = n.advertise<isc_shared_msgs::EncoderCounts>("encoder_counts", 1000);
 	bool hasEncoder;
-	n.param("has_encoder", hasEncoder, false);
+	n.param("has_encoders", hasEncoder, false);
 	isc_shared_msgs::EncoderCounts count;
 
 	ros::Rate loopRate(100); //Hz
