@@ -165,17 +165,17 @@ void move(){
 int main(int argc, char **argv){
 	ros::init(argc, argv, "roboteq_mdc2460");
 
-	ros::NodeHandle n;
+	ros::NodeHandle n, n_private("~");
 
 	// Serial port parameter
-	n.param("serial_port", port, std::string("/dev/ttyUSB0"));
-	n.param("roboteq_enable_logging", enableLogging, false);
-	n.param("gear_reduction", gearReduction, 1.0);
+	n_private.param("serial_port", port, std::string("/dev/ttyUSB0"));
+	n_private.param("enable_logging", enableLogging, false);
+	n_private.param("gear_reduction", gearReduction, 1.0);
 
 	ros::Subscriber driveModeSub = n.subscribe("motor_control", 5, driveModeCallback);
 	ros::Publisher pub = n.advertise<isc_shared_msgs::EncoderCounts>("encoder_counts", 1000);
 	bool hasEncoder;
-	n.param("has_encoders", hasEncoder, false);
+	n_private.param("has_encoders", hasEncoder, false);
 	isc_shared_msgs::EncoderCounts count;
 
 	ros::Rate loopRate(100); //Hz
