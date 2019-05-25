@@ -134,7 +134,7 @@ bool sendSpeed(string command)
 	BufferedFilterPtr plusMinusFilter = serialListener.createBufferedFilter(isPlusOrMinus);
 	string result = plusMinusFilter->wait(100);
 	if(result != "+"){
-		ROS_ERROR("The Roboteq rejected the command.");
+		ROS_ERROR("The Roboteq rejected the command (%s)", command.c_str());
 		return false;
 	}
 	return true;
