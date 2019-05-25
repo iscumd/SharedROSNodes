@@ -130,11 +130,9 @@ int checkEncoderCount(int channel)
 
 bool sendSpeed(string command)
 {
-	string echoCommand = sendCommand(command, "+");
-	BufferedFilterPtr plusMinusFilter = serialListener.createBufferedFilter(isPlusOrMinus);
-	string result = plusMinusFilter->wait(100);
+	string result = sendCommand(command, "+");
 	if(result[0] != '+'){
-		ROS_ERROR("The Roboteq rejected the command (%s)", command.c_str());
+		ROS_ERROR("The Roboteq rejected the command (%s). Got: %s", command.c_str(), result.c_str());
 		return false;
 	}
 	return true;
