@@ -140,8 +140,8 @@ bool sendSpeed(string command)
 	return true;
 }
 
-double constrainSpeed(double speed){
-	if(fabs(speed) > 1000){
+int constrainSpeed(int speed){
+	if(abs(speed) > 1000){
 		if(speed > 0){
 			speed = 1000;
 		}
@@ -158,8 +158,8 @@ void move(){
 		return;
 	}
 
-	sendSpeed(stringFormat("!G 1 %f", constrainSpeed(rightSpeed)));
-	sendSpeed(stringFormat("!G 2 %f", constrainSpeed(leftSpeed)));
+	sendSpeed(stringFormat("!G 1 %d", constrainSpeed(rightSpeed)));
+	sendSpeed(stringFormat("!G 2 %d", constrainSpeed(leftSpeed)));
 }
 
 int main(int argc, char **argv){
