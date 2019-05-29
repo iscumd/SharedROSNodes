@@ -19,6 +19,8 @@ std::string port;
 serial::Serial *serialPort;
 serial::utils::SerialListener serialListener;
 bool roboteqIsConnected = false;
+bool hasEncoder = false;
+bool flip_inputs = false;
 double leftSpeed = 0, rightSpeed = 0;
 double gearReduction = 1.0;
 bool enableLogging;
@@ -156,8 +158,8 @@ void move(){
 		return;
 	}
 
-	sendSpeed(stringFormat("!G 1 %d", constrainSpeed(rightSpeed)));
-	sendSpeed(stringFormat("!G 2 %d", constrainSpeed(leftSpeed)));
+	sendSpeed(stringFormat("!G 1 %d", (flip_inputs ? -1 : 1) * constrainSpeed(rightSpeed)));
+	sendSpeed(stringFormat("!G 2 %d", (flip_inputs ? -1 : 1) * constrainSpeed(leftSpeed)));
 }
 
 int main(int argc, char **argv){
@@ -169,11 +171,12 @@ int main(int argc, char **argv){
 	n_private.param("serial_port", port, std::string("/dev/ttyUSB0"));
 	n_private.param("enable_logging", enableLogging, false);
 	n_private.param("gear_reduction", gearReduction, 1.0);
+	n_private.param("flip_inputs", flip_inputs, false);
+	n_private.param("has_encoders", hasEncoder, false);
 
 	ros::Subscriber driveModeSub = n.subscribe("motor_control", 5, driveModeCallback);
 	ros::Publisher pub = n.advertise<isc_shared_msgs::EncoderCounts>("encoder_counts", 1000);
-	bool hasEncoder;
-	n_private.param("has_encoders", hasEncoder, false);
+	
 	isc_shared_msgs::EncoderCounts count;
 
 	ros::Rate loopRate(100); //Hz
