@@ -124,9 +124,15 @@ string sendCommand(string command, string response)
 int checkEncoderCount(int channel)
 {
 	string command_result = sendCommand(stringFormat("?CR %i", channel), "CR=");
+	string count;
 	//The result will always have first 3 characters as 'CR='.
 	//So the count we need starts from the 3rd character until the EOL.
-	string count = command_result.substr(3);
+	if (command_result.size() > 0) {
+		count = command_result.substr(3);
+	} else {
+		return 0;
+	}
+
 	return std::stoi(count);
 }
 
